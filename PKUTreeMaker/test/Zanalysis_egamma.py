@@ -108,27 +108,27 @@ process.metfilterSequence = cms.Sequence(process.BadPFMuonFilter+process.BadChar
 #begin------------JEC on the fly--------
 if runOnMC:
    jecLevelsAK4chs = [
-          'Summer16_23Sep2016V3_MC_L1FastJet_AK4PFchs.txt',
-          'Summer16_23Sep2016V3_MC_L2Relative_AK4PFchs.txt',
-          'Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt'
+          'JEC_on_the_fly/Summer16_23Sep2016V3_MC_L1FastJet_AK4PFchs.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016V3_MC_L2Relative_AK4PFchs.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt'
     ]
    jecLevelsAK4puppi = [
-          'Summer16_23Sep2016V3_MC_L1FastJet_AK4PFPuppi.txt',
-          'Summer16_23Sep2016V3_MC_L2Relative_AK4PFPuppi.txt',
-          'Summer16_23Sep2016V3_MC_L3Absolute_AK4PFPuppi.txt'
+          'JEC_on_the_fly/Summer16_23Sep2016V3_MC_L1FastJet_AK4PFPuppi.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016V3_MC_L2Relative_AK4PFPuppi.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016V3_MC_L3Absolute_AK4PFPuppi.txt'
     ]
 else:
    jecLevelsAK4chs = [
-          'Summer16_23Sep2016BCDV3_DATA_L1FastJet_AK4PFchs.txt',
-          'Summer16_23Sep2016BCDV3_DATA_L2Relative_AK4PFchs.txt',
-          'Summer16_23Sep2016BCDV3_DATA_L3Absolute_AK4PFchs.txt',
-	  'Summer16_23Sep2016BCDV3_DATA_L2L3Residual_AK4PFchs.txt'
+          'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L1FastJet_AK4PFchs.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L2Relative_AK4PFchs.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L3Absolute_AK4PFchs.txt',
+	  'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L2L3Residual_AK4PFchs.txt'
     ]
    jecLevelsAK4puppi = [
-          'Summer16_23Sep2016BCDV3_DATA_L1FastJet_AK4PFPuppi.txt',
-          'Summer16_23Sep2016BCDV3_DATA_L2Relative_AK4PFPuppi.txt',
-          'Summer16_23Sep2016BCDV3_DATA_L3Absolute_AK4PFPuppi.txt',
-	  'Summer16_23Sep2016BCDV3_DATA_L2L3Residual_AK4PFPuppi.txt'
+          'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L1FastJet_AK4PFPuppi.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L2Relative_AK4PFPuppi.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L3Absolute_AK4PFPuppi.txt',
+	  'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L2L3Residual_AK4PFPuppi.txt'
     ]
 #end------------JEC on the fly--------
 

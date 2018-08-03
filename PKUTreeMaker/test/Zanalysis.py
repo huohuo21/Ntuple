@@ -149,6 +149,7 @@ process.treeDumper = cms.EDAnalyzer("ZPKUTreeMaker",
                                     isGen = cms.bool(False),
 				    RunOnMC = cms.bool(runOnMC), 
                                     generator =  cms.InputTag("generator"),
+				    lhe =  cms.InputTag("externalLHEProducer"),
 				    genJet =  cms.InputTag("slimmedGenJets"),
                                     pileup  =   cms.InputTag("slimmedAddPileupInfo"),
                                     leptonicVSrc = cms.InputTag("leptonicV"),
@@ -215,11 +216,11 @@ process.analysis = cms.Path(
 ### Source
 process.load("VAJets.PKUCommon.data.RSGravitonToWW_kMpl01_M_1000_Tune4C_13TeV_pythia8")
 process.source.fileNames = [
-#"/store/mc/RunIISpring16MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/50000/06BA7A03-3C2A-E611-A6BD-0025905A60F4.root"
-"/store/mc/RunIISummer16MiniAODv2/LLAJJ_EWK_MLL-50_MJJ-120_13TeV-madgraph-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/50000/08DCD9BB-2C25-E711-90C9-C454449229AF.root"
+"file:/uscms_data/d3/mlu/CMSSW_8_0_26_patch2/src/FECDF61A-6420-E711-8133-0025904B12FA.root"
+
 ]
                        
-process.maxEvents.input = 300
+process.maxEvents.input =100
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = 200
@@ -229,7 +230,3 @@ process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string("ZtreePKU.root")
                                    )
 
-from datetime import datetime
-processDumpFilename = "processDump" + datetime.now().strftime("%M%S%f") + ".py"
-processDumpFile = open(processDumpFilename, 'w')
-print >> processDumpFile, process.dumpPython()

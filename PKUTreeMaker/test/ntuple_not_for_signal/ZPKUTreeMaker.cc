@@ -897,19 +897,6 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		mtemp8 = (int)trigRes->accept(hltConfig.triggerIndex(muPaths8[i]));
 		if(HLT_Mu8<mtemp8) HLT_Mu8=mtemp8;
 	}
-	edm::Handle<edm::View<reco::Candidate> > leptonicVs;
-	iEvent.getByToken(leptonicVSrc_, leptonicVs);
-	if (leptonicVs->empty()) {  outTree_->Fill(); return;  }
-
-	iEvent.getByToken(rhoToken_      , rho_     );
-	double fastJetRho = *(rho_.product());
-	useless = fastJetRho;
-
-	edm::Handle<edm::View<pat::Jet> > ak4jets;
-	iEvent.getByToken(ak4jetsSrc_, ak4jets);
-
-	edm::Handle<edm::View<pat::Photon> > photons;
-	iEvent.getByToken(photonSrc_, photons);
 
 	edm::Handle<edm::View<reco::GenParticle> > genParticles; 
 	iEvent.getByToken(genSrc_, genParticles);
@@ -954,6 +941,21 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 			ijj++;
 		}
 	}
+
+	dm::Handle<edm::View<reco::Candidate> > leptonicVs;
+        iEvent.getByToken(leptonicVSrc_, leptonicVs);
+        if (leptonicVs->empty()) {  outTree_->Fill(); return;  }
+
+        iEvent.getByToken(rhoToken_      , rho_     );
+        double fastJetRho = *(rho_.product());
+        useless = fastJetRho;
+
+        edm::Handle<edm::View<pat::Jet> > ak4jets;
+        iEvent.getByToken(ak4jetsSrc_, ak4jets);
+
+        edm::Handle<edm::View<pat::Photon> > photons;
+        iEvent.getByToken(photonSrc_, photons);
+
 
 	edm::Handle<edm::View<pat::Muon>> loosemus;
 	iEvent.getByToken(loosemuonToken_,loosemus); 

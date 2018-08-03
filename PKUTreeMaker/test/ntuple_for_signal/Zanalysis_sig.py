@@ -53,27 +53,27 @@ hltProcess = "HLT"
 #begin------------JEC on the fly--------
 if runOnMC:
    jecLevelsAK4chs = [
-          'Summer16_23Sep2016V3_MC_L1FastJet_AK4PFchs.txt',
-          'Summer16_23Sep2016V3_MC_L2Relative_AK4PFchs.txt',
-          'Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt'
+          'JEC_on_the_fly/Summer16_23Sep2016V3_MC_L1FastJet_AK4PFchs.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016V3_MC_L2Relative_AK4PFchs.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt'
     ]
    jecLevelsAK4puppi = [
-          'Summer16_23Sep2016V3_MC_L1FastJet_AK4PFPuppi.txt',
-          'Summer16_23Sep2016V3_MC_L2Relative_AK4PFPuppi.txt',
-          'Summer16_23Sep2016V3_MC_L3Absolute_AK4PFPuppi.txt'
+          'JEC_on_the_fly/Summer16_23Sep2016V3_MC_L1FastJet_AK4PFPuppi.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016V3_MC_L2Relative_AK4PFPuppi.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016V3_MC_L3Absolute_AK4PFPuppi.txt'
     ]
 else:
    jecLevelsAK4chs = [
-          'Summer16_23Sep2016BCDV3_DATA_L1FastJet_AK4PFchs.txt',
-          'Summer16_23Sep2016BCDV3_DATA_L2Relative_AK4PFchs.txt',
-          'Summer16_23Sep2016BCDV3_DATA_L3Absolute_AK4PFchs.txt',
-          'Summer16_23Sep2016BCDV3_DATA_L2L3Residual_AK4PFchs.txt'
+          'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L1FastJet_AK4PFchs.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L2Relative_AK4PFchs.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L3Absolute_AK4PFchs.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L2L3Residual_AK4PFchs.txt'
     ]
    jecLevelsAK4puppi = [
-          'Summer16_23Sep2016BCDV3_DATA_L1FastJet_AK4PFPuppi.txt',
-          'Summer16_23Sep2016BCDV3_DATA_L2Relative_AK4PFPuppi.txt',
-          'Summer16_23Sep2016BCDV3_DATA_L3Absolute_AK4PFPuppi.txt',
-          'Summer16_23Sep2016BCDV3_DATA_L2L3Residual_AK4PFPuppi.txt'
+          'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L1FastJet_AK4PFPuppi.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L2Relative_AK4PFPuppi.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L3Absolute_AK4PFPuppi.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L2L3Residual_AK4PFPuppi.txt'
     ]
 #end------------JEC on the fly--------
 
@@ -160,6 +160,7 @@ process.treeDumper = cms.EDAnalyzer("ZPKUTreeMaker",
 				    RunOnMC = cms.bool(runOnMC), 
                                     generator =  cms.InputTag("generator"),
 				    genJet =  cms.InputTag("slimmedGenJets"),
+				    lhe =  cms.InputTag("externalLHEProducer"),
                                     pileup  =   cms.InputTag("slimmedAddPileupInfo"),
                                     leptonicVSrc = cms.InputTag("leptonicV"),
                                     rho = cms.InputTag("fixedGridRhoFastjetAll"),   
@@ -226,7 +227,6 @@ process.analysis = cms.Path(
 ### Source
 process.load("VAJets.PKUCommon.data.RSGravitonToWW_kMpl01_M_1000_Tune4C_13TeV_pythia8")
 process.source.fileNames = [
-#"file:/eos/uscms/store/mc/RunIISummer16MiniAODv2/TprimeTprimeToTHTH_HToGammaGamma_M-600_TuneCUETP8M2T4_13TeV-madgraph-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v2/60000/641784F0-2BD8-E611-ABC5-02163E013616.root"
 "/store/mc/RunIISummer16MiniAODv2/LLAJJ_EWK_MLL-50_MJJ-120_13TeV-madgraph-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/50000/08DCD9BB-2C25-E711-90C9-C454449229AF.root"
 ]
                        

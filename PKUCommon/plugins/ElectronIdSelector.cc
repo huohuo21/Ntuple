@@ -191,9 +191,11 @@ void ElectronIdSelector::produce(edm::Event& iEvent,const edm::EventSetup& iSetu
     float pf_isolation = ( ( ele.pfIsolationVariables().sumChargedHadronPt
                                    + std::max( 0., ele.pfIsolationVariables().sumNeutralHadronEt + ele.pfIsolationVariables().sumPhotonEt - eA*rhoVal_) )
                                  / pt );
-
+//    float track_isolation = ele.dr03TkSumPt()/pt;// for checking aQGC HLT_Ele2 efficiency
     float isolation = 100.;
     isolation = pf_isolation;
+//    isolation = track_isolation;// for checking aQGC HLT_Ele2 efficiency
+//	std::cout<<"rho "<<rhoVal_<<" effective_area "<<eA<<" pt "<<pt<<" isolation "<<isolation<<std::endl;
 
 //    if(useDetectorIsolation_) isolation = detector_isolation;
 //    else isolation = pfIso03EA;
@@ -223,6 +225,8 @@ void ElectronIdSelector::produce(edm::Event& iEvent,const edm::EventSetup& iSetu
       bool vtxFitConversion = !(ele.passConversionVeto()==1);
 //    float mHits = ele.gsfTrack()->trackerExpectedHitsInner().numberOfHits();
     float mHits=ele.gsfTrack()->hitPattern().numberOfLostHits(reco::HitPattern::MISSING_INNER_HITS);  
+
+//	std::cout<<"eta "<<eta<<" vtxFitConversion "<<vtxFitConversion<<" sieie "<<sigmaIEtaIEta<<" detainseed "<<dEtaIn<<" dPhiIn "<<dPhiIn<<" hoe "<<hoe<<" ooemoop "<<ooemoop<<" d0 "<<d0vtx<<" dz "<<dzvtx<<" isolation "<<isolation<<" mHits "<<mHits<<std::endl;
 
     bool isTight  = false;  /////// <--- equivalent to WP70
     bool isMedium = false;  /////// <--- equivalent to WP80

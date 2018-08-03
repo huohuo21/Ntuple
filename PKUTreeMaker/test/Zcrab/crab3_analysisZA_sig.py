@@ -6,7 +6,6 @@ config.General.transferLogs = True
 
 config.section_("JobType")
 config.JobType.pluginName  = 'Analysis'
-#config.JobType.inputFiles = ['Summer16_23Sep2016V4_MC_L1FastJet_AK4PFchs.txt','Summer16_23Sep2016V4_MC_L2Relative_AK4PFchs.txt','Summer16_23Sep2016V4_MC_L3Absolute_AK4PFchs.txt','Summer16_23Sep2016V4_MC_L1FastJet_AK4PFpuppi.txt','Summer16_23Sep2016V4_MC_L2Relative_AK4PFpuppi.txt','Summer16_23Sep2016V4_MC_L3Absolute_AK4PFpuppi.txt']
 config.JobType.inputFiles = ['Summer16_23Sep2016V3_MC_L1FastJet_AK4PFchs.txt','Summer16_23Sep2016V3_MC_L2Relative_AK4PFchs.txt','Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt','Summer16_23Sep2016V3_MC_L1FastJet_AK4PFpuppi.txt','Summer16_23Sep2016V3_MC_L2Relative_AK4PFpuppi.txt','Summer16_23Sep2016V3_MC_L3Absolute_AK4PFpuppi.txt']
 # Name of the CMSSW configuration file
 config.JobType.psetName    = 'Zanalysis.py'

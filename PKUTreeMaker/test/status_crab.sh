@@ -36,6 +36,7 @@ crab status -d crab_Z-WW-2
 crab status -d crab_Z-WZ-1
 crab status -d crab_Z-WZ-2
 crab status -d crab_Z-ZA-1
+crab status -d crab_Z-ZA-private
 crab status -d crab_Z-ZA-EWK-1
 crab status -d crab_Z-ZZ-1
 crab status -d crab_Z-ZZ-2

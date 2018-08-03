@@ -22,7 +22,7 @@ elif not(runOnMC):
 hltFiltersProcessName = 'RECO'
 if runOnMC:
    hltFiltersProcessName = 'PAT' #'RECO'
-reducedConversionsName = 'RECO'#'PAT'ele#'RECO'muon
+reducedConversionsName = 'PAT'#'PAT'ele#'RECO'muon
 if runOnMC:
    reducedConversionsName= 'PAT' #'RECO'
 
@@ -124,8 +124,7 @@ else:
           'Summer16_23Sep2016GV3_DATA_L1FastJet_AK4PFchs.txt',
           'Summer16_23Sep2016GV3_DATA_L2Relative_AK4PFchs.txt',
           'Summer16_23Sep2016GV3_DATA_L3Absolute_AK4PFchs.txt',
-	  'Summer16_23Sep2016GV3_DATA_L2L3Residual_AK4PFchs.txt'
-    ]
+	  'Summer16_23Sep2016GV3_DATA_L2L3Residual_AK4PFchs.txt' ]
    jecLevelsAK4puppi = [
           'Summer16_23Sep2016GV3_DATA_L1FastJet_AK4PFPuppi.txt',
           'Summer16_23Sep2016GV3_DATA_L2Relative_AK4PFPuppi.txt',

@@ -165,7 +165,6 @@ class ZPKUTreeMaker : public edm::EDAnalyzer {
 		double theWeight;
 		double  nump=0.;
 		double  numm=0.;
-		double pweight[703];
 		double  npT, npIT;
 		int     nBX;
 		double ptVlep, yVlep, phiVlep, massVlep;
@@ -225,6 +224,16 @@ class ZPKUTreeMaker : public edm::EDAnalyzer {
 		double drj1a_f, drj2a_f, drj1l_f, drj2l_f, drj1l2_f, drj2l2_f;
 		double Mjj, deltaetajj, zepp;
 		double Mjj_f, deltaetajj_f, zepp_f; 
+	
+		// lhe for fiducial, 2018_7_23
+		double lhe_ele1_px, lhe_ele1_py,lhe_ele1_pz,lhe_ele1_e;
+		double lhe_ele2_px, lhe_ele2_py,lhe_ele2_pz,lhe_ele2_e;
+		double lhe_mu1_px, lhe_mu1_py,lhe_mu1_pz,lhe_mu1_e;
+		double lhe_mu2_px, lhe_mu2_py,lhe_mu2_pz,lhe_mu2_e;
+		double lhe_photon_px, lhe_photon_py,lhe_photon_pz,lhe_photon_e;
+		double lhe_jet1_px, lhe_jet1_py,lhe_jet1_pz,lhe_jet1_e;
+		double lhe_jet2_px, lhe_jet2_py,lhe_jet2_pz,lhe_jet2_e;
+		// lhe for fiducial, 2018_7_23
 
 		void setDummyValues();
 
@@ -272,6 +281,7 @@ class ZPKUTreeMaker : public edm::EDAnalyzer {
 		bool passFilter_duplicateMuon_	  ; 
 
 		edm::EDGetTokenT<GenEventInfoProduct> GenToken_;
+		edm::EDGetTokenT<LHEEventProduct> LheToken_;
 		edm::EDGetTokenT<reco::GenJetCollection> genJet_;
 		edm::EDGetTokenT<std::vector<PileupSummaryInfo>> PUToken_;
 		edm::EDGetTokenT<edm::View<reco::Candidate>> leptonicVSrc_;
@@ -349,6 +359,7 @@ ZPKUTreeMaker::ZPKUTreeMaker(const edm::ParameterSet& iConfig)//:
 	muPaths7_=iConfig.getParameter<std::vector<std::string>>("muPaths7");
 	muPaths8_=iConfig.getParameter<std::vector<std::string>>("muPaths8");
 	GenToken_=consumes<GenEventInfoProduct> (iConfig.getParameter<edm::InputTag>( "generator") ) ;
+	LheToken_=consumes<LHEEventProduct> (iConfig.getParameter<edm::InputTag>( "lhe") ) ;
 	genJet_=consumes<reco::GenJetCollection>(iConfig.getParameter<edm::InputTag>("genJet"));
 	PUToken_=consumes<std::vector<PileupSummaryInfo>>(iConfig.getParameter<edm::InputTag>("pileup") ) ;
 	leptonicVSrc_=consumes<edm::View<reco::Candidate> >(iConfig.getParameter<edm::InputTag>( "leptonicVSrc") ) ;
@@ -414,7 +425,6 @@ ZPKUTreeMaker::ZPKUTreeMaker(const edm::ParameterSet& iConfig)//:
 	outTree_->Branch("theWeight"           ,&theWeight         ,"theWeight/D"          );
 	outTree_->Branch("nump"           ,&nump         ,"nump/D"          );
 	outTree_->Branch("numm"           ,&numm         ,"numm/D"          );
-	outTree_->Branch("pweight"           ,pweight         ,"pweight[703]/D"          );
 	outTree_->Branch("npT"           ,&npT         ,"npT/D"          );
 	outTree_->Branch("lep"             ,&lep            ,"lep/I"            );
 	outTree_->Branch("ptVlep"          ,&ptVlep         ,"ptVlep/D"         );
@@ -597,6 +607,36 @@ ZPKUTreeMaker::ZPKUTreeMaker(const edm::ParameterSet& iConfig)//:
 	outTree_->Branch("lep2_phi_station2"      ,&lep2_phi_station2     ,"lep2_phi_station2/D"     );
 	outTree_->Branch("lep2_sign"      ,&lep2_sign     ,"lep2_sign/I"     );
 	//Lu
+	// lhe for fiducial 2018_7_23
+	outTree_->Branch("lhe_ele1_px"      ,&lhe_ele1_px     ,"lhe_ele1_px/D"     );
+	outTree_->Branch("lhe_ele1_py"      ,&lhe_ele1_py     ,"lhe_ele1_py/D"     );
+	outTree_->Branch("lhe_ele1_pz"      ,&lhe_ele1_pz     ,"lhe_ele1_pz/D"     );
+	outTree_->Branch("lhe_ele1_e"      ,&lhe_ele1_e     ,"lhe_ele1_e/D"     );
+	outTree_->Branch("lhe_ele2_px"      ,&lhe_ele2_px     ,"lhe_ele2_px/D"     );
+	outTree_->Branch("lhe_ele2_py"      ,&lhe_ele2_py     ,"lhe_ele2_py/D"     );
+	outTree_->Branch("lhe_ele2_pz"      ,&lhe_ele2_pz     ,"lhe_ele2_pz/D"     );
+	outTree_->Branch("lhe_ele2_e"      ,&lhe_ele2_e     ,"lhe_ele2_e/D"     );
+	outTree_->Branch("lhe_mu1_px"      ,&lhe_mu1_px     ,"lhe_mu1_px/D"     );
+	outTree_->Branch("lhe_mu1_py"      ,&lhe_mu1_py     ,"lhe_mu1_py/D"     );
+	outTree_->Branch("lhe_mu1_pz"      ,&lhe_mu1_pz     ,"lhe_mu1_pz/D"     );
+	outTree_->Branch("lhe_mu1_e"      ,&lhe_mu1_e     ,"lhe_mu1_e/D"     );
+	outTree_->Branch("lhe_mu2_px"      ,&lhe_mu2_px     ,"lhe_mu2_px/D"     );
+	outTree_->Branch("lhe_mu2_py"      ,&lhe_mu2_py     ,"lhe_mu2_py/D"     );
+	outTree_->Branch("lhe_mu2_pz"      ,&lhe_mu2_pz     ,"lhe_mu2_pz/D"     );
+	outTree_->Branch("lhe_mu2_e"      ,&lhe_mu2_e     ,"lhe_mu2_e/D"     );
+	outTree_->Branch("lhe_jet1_px"      ,&lhe_jet1_px     ,"lhe_jet1_px/D"     );
+	outTree_->Branch("lhe_jet1_py"      ,&lhe_jet1_py     ,"lhe_jet1_py/D"     );
+	outTree_->Branch("lhe_jet1_pz"      ,&lhe_jet1_pz     ,"lhe_jet1_pz/D"     );
+	outTree_->Branch("lhe_jet1_e"      ,&lhe_jet1_e     ,"lhe_jet1_e/D"     );
+	outTree_->Branch("lhe_jet2_px"      ,&lhe_jet2_px     ,"lhe_jet2_px/D"     );
+	outTree_->Branch("lhe_jet2_py"      ,&lhe_jet2_py     ,"lhe_jet2_py/D"     );
+	outTree_->Branch("lhe_jet2_pz"      ,&lhe_jet2_pz     ,"lhe_jet2_pz/D"     );
+	outTree_->Branch("lhe_jet2_e"      ,&lhe_jet2_e     ,"lhe_jet2_e/D"     );
+	outTree_->Branch("lhe_photon_px"      ,&lhe_photon_px     ,"lhe_photon_px/D"     );
+	outTree_->Branch("lhe_photon_py"      ,&lhe_photon_py     ,"lhe_photon_py/D"     );
+	outTree_->Branch("lhe_photon_pz"      ,&lhe_photon_pz     ,"lhe_photon_pz/D"     );
+	outTree_->Branch("lhe_photon_e"      ,&lhe_photon_e     ,"lhe_photon_e/D"     );
+	// lhe for fiducial 2018_7_23
 }
 
 //------------------------------------
@@ -832,6 +872,69 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		theWeight = genEvtInfo->weight();
 		if(theWeight>0) nump = nump+1;
 		if(theWeight<0) numm = numm+1;
+	
+		edm::Handle<LHEEventProduct> wgtsource;
+		// cout the weight name 2018.07.03
+                iEvent.getByToken(LheToken_, wgtsource);
+
+		const lhef::HEPEUP& lheEvent = wgtsource->hepeup();
+		std::vector<lhef::HEPEUP::FiveVector> lheParticles = lheEvent.PUP;
+		size_t numParticles = lheParticles.size();
+		for ( size_t idxParticle = 0; idxParticle < numParticles; ++idxParticle ) {
+			int absPdgId = TMath::Abs(lheEvent.IDUP[idxParticle]);
+				std::cout<<"pid "<<absPdgId<<" px "<<lheParticles[idxParticle][0]<<" py "<<lheParticles[idxParticle][1]<<" pz "<<lheParticles[idxParticle][2]<<" e "<<lheParticles[idxParticle][3]<<std::endl;
+			int status = lheEvent.ISTUP[idxParticle];
+			if (status == 1 && ((absPdgId >= 1 && absPdgId <= 6) || absPdgId == 21) ) {
+				if(lhe_jet1_e<0){
+					lhe_jet1_px=lheParticles[idxParticle][0];
+					lhe_jet1_py=lheParticles[idxParticle][1];
+					lhe_jet1_pz=lheParticles[idxParticle][2];
+					lhe_jet1_e=lheParticles[idxParticle][3];
+				}
+				if(lhe_jet1_e>0){
+					lhe_jet2_px=lheParticles[idxParticle][0];
+					lhe_jet2_py=lheParticles[idxParticle][1];
+					lhe_jet2_pz=lheParticles[idxParticle][2];
+					lhe_jet2_e=lheParticles[idxParticle][3];
+				}
+			}
+			if (status == 1 && absPdgId == 11 ) {
+				std::cout<<"mother "<<lheEvent.MOTHUP[idxParticle].first<<" "<<lheEvent.MOTHUP[idxParticle].second<<std::endl;
+                                if(lhe_ele1_e<0){
+                                        lhe_ele1_px=lheParticles[idxParticle][0];
+                                        lhe_ele1_py=lheParticles[idxParticle][1];
+                                        lhe_ele1_pz=lheParticles[idxParticle][2];
+                                        lhe_ele1_e=lheParticles[idxParticle][3];
+                                }
+                                if(lhe_ele1_e>0){
+                                        lhe_ele2_px=lheParticles[idxParticle][0];
+                                        lhe_ele2_py=lheParticles[idxParticle][1];
+                                        lhe_ele2_pz=lheParticles[idxParticle][2];
+                                        lhe_ele2_e=lheParticles[idxParticle][3];
+                                }
+                        }
+			if (status == 1 && absPdgId == 13 ) {
+				std::cout<<"mother "<<lheEvent.MOTHUP[idxParticle].first<<" "<<lheEvent.MOTHUP[idxParticle].second<<std::endl;
+                                if(lhe_mu1_e<0){
+                                        lhe_mu1_px=lheParticles[idxParticle][0];
+                                        lhe_mu1_py=lheParticles[idxParticle][1];
+                                        lhe_mu1_pz=lheParticles[idxParticle][2];
+                                        lhe_mu1_e=lheParticles[idxParticle][3];
+                                }
+                                if(lhe_mu1_e>0){
+                                        lhe_mu2_px=lheParticles[idxParticle][0];
+                                        lhe_mu2_py=lheParticles[idxParticle][1];
+                                        lhe_mu2_pz=lheParticles[idxParticle][2];
+                                        lhe_mu2_e=lheParticles[idxParticle][3];
+                                }
+                        }
+			if (status == 1 && absPdgId == 22 ) {
+                        	lhe_photon_px=lheParticles[idxParticle][0];
+                        	lhe_photon_py=lheParticles[idxParticle][1];
+                        	lhe_photon_pz=lheParticles[idxParticle][2];
+                        	lhe_photon_e=lheParticles[idxParticle][3];
+                        }
+		}
 
 		edm::Handle<std::vector<PileupSummaryInfo>>  PupInfo;
 		iEvent.getByToken(PUToken_, PupInfo);
@@ -897,19 +1000,6 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		mtemp8 = (int)trigRes->accept(hltConfig.triggerIndex(muPaths8[i]));
 		if(HLT_Mu8<mtemp8) HLT_Mu8=mtemp8;
 	}
-	edm::Handle<edm::View<reco::Candidate> > leptonicVs;
-	iEvent.getByToken(leptonicVSrc_, leptonicVs);
-	if (leptonicVs->empty()) {  outTree_->Fill(); return;  }
-
-	iEvent.getByToken(rhoToken_      , rho_     );
-	double fastJetRho = *(rho_.product());
-	useless = fastJetRho;
-
-	edm::Handle<edm::View<pat::Jet> > ak4jets;
-	iEvent.getByToken(ak4jetsSrc_, ak4jets);
-
-	edm::Handle<edm::View<pat::Photon> > photons;
-	iEvent.getByToken(photonSrc_, photons);
 
 	edm::Handle<edm::View<reco::GenParticle> > genParticles; 
 	iEvent.getByToken(genSrc_, genParticles);
@@ -946,14 +1036,34 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		edm::Handle<reco::GenJetCollection> genJets;
 		iEvent.getByToken(genJet_,genJets);
 		reco::GenJetCollection::const_iterator i_jet;
+//		std::cout<<"nevent "<<nevent<<std::endl;//gen jet debug
 		for( i_jet=genJets->begin(); i_jet != genJets->end();i_jet++){
-			genjet_e[ijj] = i_jet->energy();
+			if(ijj>5) continue;
 			genjet_pt[ijj]= i_jet->pt();
+//			std::cout<<"pt "<<genjet_pt[ijj]<<std::endl;//gen jet debug
 			genjet_eta[ijj]= i_jet->eta();
+//			std::cout<<"eta "<<genjet_eta[ijj]<<std::endl;//gen jet debug
 			genjet_phi[ijj]=i_jet->phi();
+//			std::cout<<"phi "<<genjet_phi[ijj]<<std::endl;//gen jet debug
+			genjet_e[ijj] = i_jet->energy();
+//			std::cout<<"e "<<genjet_e[ijj]<<std::endl;//gen jet debug
 			ijj++;
 		}
 	}
+
+	edm::Handle<edm::View<reco::Candidate> > leptonicVs;
+        iEvent.getByToken(leptonicVSrc_, leptonicVs);
+        if (leptonicVs->empty()) {  outTree_->Fill(); return;  }
+
+        iEvent.getByToken(rhoToken_      , rho_     );
+        double fastJetRho = *(rho_.product());
+        useless = fastJetRho;
+
+        edm::Handle<edm::View<pat::Jet> > ak4jets;
+        iEvent.getByToken(ak4jetsSrc_, ak4jets);
+
+        edm::Handle<edm::View<pat::Photon> > photons;
+        iEvent.getByToken(photonSrc_, photons);
 
 	edm::Handle<edm::View<pat::Muon>> loosemus;
 	iEvent.getByToken(loosemuonToken_,loosemus); 
@@ -1079,11 +1189,11 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	}
 	// Lu
 	ptlep1       = leptonicV.daughter(0)->pt();
-//	std::cout<<"ptlep1 "<<ptlep1<<" goodmuon lep1 "<<(*goodmus)[0].p4().pt()<<std::endl;
+//	std::cout<<"ptlep1 "<<ptlep1<<std::endl;
 	etalep1      = leptonicV.daughter(0)->eta();
 	philep1      = leptonicV.daughter(0)->phi(); 
 	ptlep2       = leptonicV.daughter(1)->pt();
-//	std::cout<<"ptlep2 "<<ptlep2<<" goodmuon lep2 "<<(*goodmus)[1].p4().pt()<<std::endl;
+//	std::cout<<"ptlep2 "<<ptlep2<<std::endl;
 	etalep2      = leptonicV.daughter(1)->eta();
 	philep2      = leptonicV.daughter(1)->phi();
 	// for muon rochester correction
@@ -1210,8 +1320,8 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		}
 
 
-		if(passEleVetonew && (*photons)[ip].isEB() && (*photons)[ip].hadTowOverEm()<0.0396 && photon_sieie[ip]<0.01022 && chiso<0.441 && nhiso<(2.725 + (0.0148*(*photons)[ip].pt()+0.000017*(*photons)[ip].pt()*(*photons)[ip].pt())) && phoiso<(2.571+0.0047*(*photons)[ip].pt())) {ismedium_photon=1;}
-		if(passEleVetonew && (*photons)[ip].isEE() && (*photons)[ip].hadTowOverEm()<0.0219 && photon_sieie[ip]<0.03001 && chiso<0.442 && nhiso<(1.715 + (0.0163*(*photons)[ip].pt()+0.000014*(*photons)[ip].pt()*(*photons)[ip].pt())) && phoiso<(3.863+0.0034*(*photons)[ip].pt())) {ismedium_photon=1;}
+		if(passEleVetonew && fabs((*photons)[ip].eta())<1.4442 && (*photons)[ip].hadTowOverEm()<0.0396 && photon_sieie[ip]<0.01022 && chiso<0.441 && nhiso<(2.725 + (0.0148*(*photons)[ip].pt()+0.000017*(*photons)[ip].pt()*(*photons)[ip].pt())) && phoiso<(2.571+0.0047*(*photons)[ip].pt())) {ismedium_photon=1;}
+		if(passEleVetonew && fabs((*photons)[ip].eta())<2.5 &&fabs((*photons)[ip].eta())>1.566 && (*photons)[ip].hadTowOverEm()<0.0219 && photon_sieie[ip]<0.03001 && chiso<0.442 && nhiso<(1.715 + (0.0163*(*photons)[ip].pt()+0.000014*(*photons)[ip].pt()*(*photons)[ip].pt())) && phoiso<(3.863+0.0034*(*photons)[ip].pt())) {ismedium_photon=1;}
 
 		if(ismedium_photon==1 && deltaR(phosc_eta,phosc_phi,etalep1,philep1) > 0.7 && deltaR(phosc_eta,phosc_phi,etalep2,philep2) > 0.7) { 
 			if(ip==0) {photonet=(*photons)[ip].pt(); iphoton=ip;}
@@ -1223,8 +1333,8 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 		//////////////////////////////////for fake photon study, store photon without sieie cut
 		////Inverting loose ID
-		if(passEleVetonew && (*photons)[ip].isEB() && (*photons)[ip].hadTowOverEm()<0.0597 && chiso<std::min(0.2*(*photons)[ip].pt(), 5.*1.295) && nhiso<std::min(0.2*(*photons)[ip].pt(), 5.*(10.910 + (0.0148*(*photons)[ip].pt()+0.000017*(*photons)[ip].pt()*(*photons)[ip].pt())) ) && phoiso<std::min(0.2*(*photons)[ip].pt(), 5.*(3.630+0.0047*(*photons)[ip].pt()))  && !(photon_sieie[ip]<0.01031&&chiso<1.295 && nhiso<(10.910 + (0.0148*(*photons)[ip].pt()+0.000017*(*photons)[ip].pt()*(*photons)[ip].pt())) && phoiso<(3.630+0.0047*(*photons)[ip].pt()))) {ismedium_photon_f=1;}
-		if(passEleVetonew && (*photons)[ip].isEE() && (*photons)[ip].hadTowOverEm()<0.0481 && chiso<std::min(0.2*(*photons)[ip].pt(), 5.*1.011) && nhiso<std::min(0.2*(*photons)[ip].pt(), 5.*(5.931 + (0.0163*(*photons)[ip].pt()+0.000014*(*photons)[ip].pt()*(*photons)[ip].pt())) ) && phoiso<std::min(0.2*(*photons)[ip].pt(), 5.*(6.641+0.0034*(*photons)[ip].pt())) && !(photon_sieie[ip]<0.03013 && chiso<1.011 && nhiso<(5.931 + (0.0163*(*photons)[ip].pt()+0.000014*(*photons)[ip].pt()*(*photons)[ip].pt())) && phoiso<(6.641+0.0034*(*photons)[ip].pt()))) {ismedium_photon_f=1;}
+		if(passEleVetonew && fabs((*photons)[ip].eta())<1.4442 && (*photons)[ip].hadTowOverEm()<0.0597 && chiso<std::min(0.2*(*photons)[ip].pt(), 5.*1.295) && nhiso<std::min(0.2*(*photons)[ip].pt(), 5.*(10.910 + (0.0148*(*photons)[ip].pt()+0.000017*(*photons)[ip].pt()*(*photons)[ip].pt())) ) && phoiso<std::min(0.2*(*photons)[ip].pt(), 5.*(3.630+0.0047*(*photons)[ip].pt()))  && !(photon_sieie[ip]<0.01031&&chiso<1.295 && nhiso<(10.910 + (0.0148*(*photons)[ip].pt()+0.000017*(*photons)[ip].pt()*(*photons)[ip].pt())) && phoiso<(3.630+0.0047*(*photons)[ip].pt()))) {ismedium_photon_f=1;}
+		if(passEleVetonew && fabs((*photons)[ip].eta())<2.5 &&fabs((*photons)[ip].eta())>1.566 && (*photons)[ip].hadTowOverEm()<0.0481 && chiso<std::min(0.2*(*photons)[ip].pt(), 5.*1.011) && nhiso<std::min(0.2*(*photons)[ip].pt(), 5.*(5.931 + (0.0163*(*photons)[ip].pt()+0.000014*(*photons)[ip].pt()*(*photons)[ip].pt())) ) && phoiso<std::min(0.2*(*photons)[ip].pt(), 5.*(6.641+0.0034*(*photons)[ip].pt())) && !(photon_sieie[ip]<0.03013 && chiso<1.011 && nhiso<(5.931 + (0.0163*(*photons)[ip].pt()+0.000014*(*photons)[ip].pt()*(*photons)[ip].pt())) && phoiso<(6.641+0.0034*(*photons)[ip].pt()))) {ismedium_photon_f=1;}
 		if(ismedium_photon_f==1 && deltaR(phosc_eta,phosc_phi,etalep1,philep1) > 0.7 && deltaR(phosc_eta,phosc_phi,etalep2,philep2) > 0.7) { 
 			if(ip==0) {photonet_f=(*photons)[ip].pt(); iphoton_f=ip;}
 			if((*photons)[ip].pt()>photonet_f) {
@@ -1498,9 +1608,6 @@ void ZPKUTreeMaker::setDummyValues() {
 	MET_et = -99;
 	MET_phi = -99;
 	MET_sumEt = -99;
-	for(int j=0; j<703; j++){
-		pweight[j]=0.0;
-	}
 	for(int i=0; i<6;i++){
 		genjet_pt[i]  = -1e1;
 		genjet_eta[i]  = -1e1;
@@ -1562,6 +1669,37 @@ void ZPKUTreeMaker::setDummyValues() {
 	passEleVeto=false;
 	passEleVetonew=false;
 	passPixelSeedVeto=false;
+
+	//lhe for fiducial 2018_7_23
+	lhe_ele1_px = -1e1;
+	lhe_ele1_py = -1e1;
+	lhe_ele1_pz = -1e1;
+	lhe_ele1_e = -1e1;
+	lhe_ele2_px = -1e1;
+	lhe_ele2_py = -1e1;
+	lhe_ele2_pz = -1e1;
+	lhe_ele2_e = -1e1;
+	lhe_mu1_px = -1e1;
+	lhe_mu1_py = -1e1;
+	lhe_mu1_pz = -1e1;
+	lhe_mu1_e = -1e1;
+	lhe_mu2_px = -1e1;
+	lhe_mu2_py = -1e1;
+	lhe_mu2_pz = -1e1;
+	lhe_mu2_e = -1e1;
+	lhe_jet1_px = -1e1;
+	lhe_jet1_py = -1e1;
+	lhe_jet1_pz = -1e1;
+	lhe_jet1_e = -1e1;
+	lhe_jet2_px = -1e1;
+	lhe_jet2_py = -1e1;
+	lhe_jet2_pz = -1e1;
+	lhe_jet2_e = -1e1;
+	lhe_photon_px = -1e1;
+	lhe_photon_py = -1e1;
+	lhe_photon_pz = -1e1;
+	lhe_photon_e = -1e1;
+	//lhe for fiducial 2018_7_23
 
 
 	ISRPho = false;

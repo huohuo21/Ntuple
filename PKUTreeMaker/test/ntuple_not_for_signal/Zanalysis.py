@@ -32,10 +32,36 @@ process.load("VAJets.PKUCommon.goodJets_cff")
 process.load("VAJets.PKUCommon.goodPhotons_cff")
 process.load("VAJets.PKUCommon.leptonicZ_cff")
 
+#for egamma smearing
+
+from EgammaAnalysis.ElectronTools.regressionWeights_cfi import regressionWeights
+process = regressionWeights(process)
+process.load('EgammaAnalysis.ElectronTools.regressionApplication_cff')
+
+process.load('Configuration.StandardSequences.Services_cff')
+process.RandomNumberGeneratorService = cms.Service("RandomNumberGeneratorService",
+   calibratedPatElectrons  = cms.PSet( initialSeed = cms.untracked.uint32(81),
+      engineName = cms.untracked.string('TRandom3'),
+   ),
+   calibratedPatPhotons  = cms.PSet( initialSeed = cms.untracked.uint32(81),
+      engineName = cms.untracked.string('TRandom3'),
+   ),
+)
+process.load('EgammaAnalysis.ElectronTools.calibratedPatElectronsRun2_cfi')
+process.load('EgammaAnalysis.ElectronTools.calibratedPatPhotonsRun2_cfi')
+process.calibratedPatElectrons.electrons = cms.InputTag("slimmedElectrons")
+process.calibratedPatElectrons.isMC = cms.bool(runOnMC)
+process.calibratedPatPhotons.photons = cms.InputTag('slimmedPhotons')
+process.calibratedPatPhotons.isMC = cms.bool(runOnMC)
+
+#for egamma smearing
+
 # If Update
 process.goodMuons.src = "slimmedMuons"
-process.goodElectrons.src = "slimmedElectrons"
-process.goodPhotons.src = "slimmedPhotons"
+#process.goodElectrons.src = "slimmedElectrons"
+#process.goodPhotons.src = "slimmedPhotons"
+process.goodElectrons.src = "calibratedPatElectrons"
+process.goodPhotons.src = "calibratedPatPhotons"
 
 process.load("VAJets.PKUCommon.goodJets_cff") 
 if chsorpuppi:
@@ -65,6 +91,7 @@ process.leptonicVFilter = cms.EDFilter("CandViewCountFilter",
 
 
 process.leptonSequence = cms.Sequence(process.muSequence +
+				      process.regressionApplication* process.calibratedPatElectrons* process.calibratedPatPhotons +
                                       process.eleSequence +
                                       process.leptonicVSequence +
                                       process.leptonicVSelector +
@@ -83,27 +110,27 @@ process.metfilterSequence = cms.Sequence(process.BadPFMuonFilter+process.BadChar
 #begin------------JEC on the fly--------
 if runOnMC:
    jecLevelsAK4chs = [
-          'Summer16_23Sep2016V3_MC_L1FastJet_AK4PFchs.txt',
-          'Summer16_23Sep2016V3_MC_L2Relative_AK4PFchs.txt',
-          'Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt'
+          'JEC_on_the_fly/Summer16_23Sep2016V3_MC_L1FastJet_AK4PFchs.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016V3_MC_L2Relative_AK4PFchs.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt'
     ]
    jecLevelsAK4puppi = [
-          'Summer16_23Sep2016V3_MC_L1FastJet_AK4PFPuppi.txt',
-          'Summer16_23Sep2016V3_MC_L2Relative_AK4PFPuppi.txt',
-          'Summer16_23Sep2016V3_MC_L3Absolute_AK4PFPuppi.txt'
+          'JEC_on_the_fly/Summer16_23Sep2016V3_MC_L1FastJet_AK4PFPuppi.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016V3_MC_L2Relative_AK4PFPuppi.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016V3_MC_L3Absolute_AK4PFPuppi.txt'
     ]
 else:
    jecLevelsAK4chs = [
-          'Summer16_23Sep2016BCDV3_DATA_L1FastJet_AK4PFchs.txt',
-          'Summer16_23Sep2016BCDV3_DATA_L2Relative_AK4PFchs.txt',
-          'Summer16_23Sep2016BCDV3_DATA_L3Absolute_AK4PFchs.txt',
-	  'Summer16_23Sep2016BCDV3_DATA_L2L3Residual_AK4PFchs.txt'
+          'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L1FastJet_AK4PFchs.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L2Relative_AK4PFchs.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L3Absolute_AK4PFchs.txt',
+	  'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L2L3Residual_AK4PFchs.txt'
     ]
    jecLevelsAK4puppi = [
-          'Summer16_23Sep2016BCDV3_DATA_L1FastJet_AK4PFPuppi.txt',
-          'Summer16_23Sep2016BCDV3_DATA_L2Relative_AK4PFPuppi.txt',
-          'Summer16_23Sep2016BCDV3_DATA_L3Absolute_AK4PFPuppi.txt',
-	  'Summer16_23Sep2016BCDV3_DATA_L2L3Residual_AK4PFPuppi.txt'
+          'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L1FastJet_AK4PFPuppi.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L2Relative_AK4PFPuppi.txt',
+          'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L3Absolute_AK4PFPuppi.txt',
+	  'JEC_on_the_fly/Summer16_23Sep2016BCDV3_DATA_L2L3Residual_AK4PFPuppi.txt'
     ]
 #end------------JEC on the fly--------
 
@@ -127,8 +154,8 @@ process.treeDumper = cms.EDAnalyzer("ZPKUTreeMaker",
                                     leptonicVSrc = cms.InputTag("leptonicV"),
                                     rho = cms.InputTag("fixedGridRhoFastjetAll"),   
                                     ak4jetsSrc = cms.InputTag("cleanAK4Jets"),      
-#                                    photonSrc = cms.InputTag("goodPhotons"),
-                                    photonSrc = cms.InputTag("slimmedPhotons"),
+                                    #photonSrc = cms.InputTag("slimmedPhotons"),
+				    photonSrc = cms.InputTag("calibratedPatPhotons"),
                                     genSrc =  cms.InputTag("prunedGenParticles"),       
                                     jecAK4chsPayloadNames = cms.vstring( jecLevelsAK4chs ),
                                     jecAK4PayloadNames = cms.vstring( ak4jecsrc ),
@@ -136,8 +163,9 @@ process.treeDumper = cms.EDAnalyzer("ZPKUTreeMaker",
                                     vertex = cms.InputTag("offlineSlimmedPrimaryVertices"),  
                                     t1jetSrc = cms.InputTag("slimmedJets"),      
                                     t1muSrc = cms.InputTag("slimmedMuons"),       
+                                    #electrons = cms.InputTag("slimmedElectrons"),
+				    electrons = cms.InputTag("calibratedPatElectrons"),
                                     looseelectronSrc = cms.InputTag("vetoElectrons"),
-                                    electrons = cms.InputTag("slimmedElectrons"),
                                     conversions = cms.InputTag("reducedEgamma","reducedConversions",reducedConversionsName),
                                     beamSpot = cms.InputTag("offlineBeamSpot","","RECO"),
                                     loosemuonSrc = cms.InputTag("looseMuons"),
@@ -187,10 +215,11 @@ process.analysis = cms.Path(
 ### Source
 process.load("VAJets.PKUCommon.data.RSGravitonToWW_kMpl01_M_1000_Tune4C_13TeV_pythia8")
 process.source.fileNames = [
-"/store/mc/RunIISpring16MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/50000/06BA7A03-3C2A-E611-A6BD-0025905A60F4.root"
+#"/store/mc/RunIISpring16MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/50000/06BA7A03-3C2A-E611-A6BD-0025905A60F4.root"
+"/store/mc/RunIISummer16MiniAODv2/LLAJJ_EWK_MLL-50_MJJ-120_13TeV-madgraph-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/50000/08DCD9BB-2C25-E711-90C9-C454449229AF.root"
 ]
                        
-process.maxEvents.input = 100
+process.maxEvents.input = 300
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = 200
@@ -199,3 +228,8 @@ process.MessageLogger.cerr.FwkReport.limit = 99999999
 process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string("ZtreePKU.root")
                                    )
+
+from datetime import datetime
+processDumpFilename = "processDump" + datetime.now().strftime("%M%S%f") + ".py"
+processDumpFile = open(processDumpFilename, 'w')
+print >> processDumpFile, process.dumpPython()

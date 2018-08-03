@@ -22,7 +22,7 @@ elif not(runOnMC):
 hltFiltersProcessName = 'RECO'
 if runOnMC:
    hltFiltersProcessName = 'PAT' #'RECO'
-reducedConversionsName = 'RECO'#'PAT'ele#'RECO'muon
+reducedConversionsName = 'PAT'#'PAT'ele#'RECO'muon
 if runOnMC:
    reducedConversionsName= 'PAT' #'RECO'
 

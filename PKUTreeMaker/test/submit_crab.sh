@@ -26,5 +26,6 @@ crab submit -c Zcrab/crab3_analysisWZ1.py
 crab submit -c Zcrab/crab3_analysisWZ2.py
 crab submit -c Zcrab/crab3_analysisZZ1.py
 crab submit -c Zcrab/crab3_analysisZZ2.py
-#crab submit -c Zcrab/crab3_analysisZA.py
+crab submit -c Zcrab/crab3_analysisZA.py
+crab submit -c Zcrab/crab3_analysisZA_private.py
 crab submit -c Zcrab/crab3_analysisZA_sig.py
