@@ -103,6 +103,7 @@ class ZPKUTreeMaker : public edm::EDAnalyzer {
 		std::pair<double,double> EtaPhiAtME2X(const pat::Muon *iM, const PropagateToMuon *propagatetomuon);
 		std::pair<double,double> lep1_etaphi_;
 		std::pair<double,double> lep2_etaphi_;
+		double ele1_sigmaieie, ele2_sigmaieie;
 		double lep1_eta_station2;
 		double lep1_phi_station2;
 		int lep1_sign;
@@ -110,6 +111,7 @@ class ZPKUTreeMaker : public edm::EDAnalyzer {
 		double lep2_phi_station2;
 		int lep2_sign;
 		edm::EDGetTokenT<edm::View<pat::Muon> > goodmuonToken_;
+		edm::EDGetTokenT<edm::View<pat::Electron> > goodeleToken_;
 		PropagateToMuon *muPropagator2nd_;
 		// Lu
 
@@ -386,6 +388,7 @@ ZPKUTreeMaker::ZPKUTreeMaker(const edm::ParameterSet& iConfig)//:
 	looseelectronToken_    = (consumes<edm::View<pat::Electron> > (iConfig.getParameter<edm::InputTag>("looseelectronSrc"))) ;
 	loosemuonToken_    = (consumes<edm::View<pat::Muon> > (iConfig.getParameter<edm::InputTag>("loosemuonSrc")))              ;
 	goodmuonToken_    = (consumes<edm::View<pat::Muon> > (iConfig.getParameter<edm::InputTag>("goodmuonSrc")))              ;
+	goodeleToken_    = (consumes<edm::View<pat::Electron> > (iConfig.getParameter<edm::InputTag>("goodeleSrc")))              ;
 	beamSpotToken_    = (consumes<reco::BeamSpot>(iConfig.getParameter<edm::InputTag>("beamSpot"))) ;
 	conversionsToken_ = (consumes<std::vector<reco::Conversion> >(iConfig.getParameter<edm::InputTag>("conversions"))) ;
 
@@ -882,7 +885,7 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		size_t numParticles = lheParticles.size();
 		for ( size_t idxParticle = 0; idxParticle < numParticles; ++idxParticle ) {
 			int absPdgId = TMath::Abs(lheEvent.IDUP[idxParticle]);
-				std::cout<<"pid "<<absPdgId<<" px "<<lheParticles[idxParticle][0]<<" py "<<lheParticles[idxParticle][1]<<" pz "<<lheParticles[idxParticle][2]<<" e "<<lheParticles[idxParticle][3]<<std::endl;
+//				std::cout<<"pid "<<absPdgId<<" px "<<lheParticles[idxParticle][0]<<" py "<<lheParticles[idxParticle][1]<<" pz "<<lheParticles[idxParticle][2]<<" e "<<lheParticles[idxParticle][3]<<std::endl;
 			int status = lheEvent.ISTUP[idxParticle];
 			if (status == 1 && ((absPdgId >= 1 && absPdgId <= 6) || absPdgId == 21) ) {
 				if(lhe_jet1_e<0){
@@ -899,7 +902,7 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 				}
 			}
 			if (status == 1 && absPdgId == 11 ) {
-				std::cout<<"mother "<<lheEvent.MOTHUP[idxParticle].first<<" "<<lheEvent.MOTHUP[idxParticle].second<<std::endl;
+//				std::cout<<"mother "<<lheEvent.MOTHUP[idxParticle].first<<" "<<lheEvent.MOTHUP[idxParticle].second<<std::endl;
                                 if(lhe_ele1_e<0){
                                         lhe_ele1_px=lheParticles[idxParticle][0];
                                         lhe_ele1_py=lheParticles[idxParticle][1];
@@ -914,7 +917,7 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                                 }
                         }
 			if (status == 1 && absPdgId == 13 ) {
-				std::cout<<"mother "<<lheEvent.MOTHUP[idxParticle].first<<" "<<lheEvent.MOTHUP[idxParticle].second<<std::endl;
+//				std::cout<<"mother "<<lheEvent.MOTHUP[idxParticle].first<<" "<<lheEvent.MOTHUP[idxParticle].second<<std::endl;
                                 if(lhe_mu1_e<0){
                                         lhe_mu1_px=lheParticles[idxParticle][0];
                                         lhe_mu1_py=lheParticles[idxParticle][1];
@@ -1069,6 +1072,8 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	iEvent.getByToken(loosemuonToken_,loosemus); 
 	edm::Handle<edm::View<pat::Muon>> goodmus;
 	iEvent.getByToken(goodmuonToken_,goodmus);
+	edm::Handle<edm::View<pat::Electron>> goodeles;
+	iEvent.getByToken(goodeleToken_,goodeles);
 	edm::Handle<edm::View<pat::Electron>> looseeles;
 	iEvent.getByToken(looseelectronToken_,looseeles); 
 	edm::Handle<edm::View<reco::Candidate> > metHandle; 
@@ -1176,6 +1181,12 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	yVlep        = leptonicV.eta();
 	phiVlep      = leptonicV.phi();
 	massVlep     = leptonicV.mass();
+	// retreive electron's sigma_ieie for shape correction
+	if(goodeles->size()>1){
+		ele1_sigmaieie = (*goodeles)[0].full5x5_sigmaIetaIeta();
+		ele2_sigmaieie = (*goodeles)[1].full5x5_sigmaIetaIeta();
+	//	std::cout<<(*goodeles)[0].pt()<<" "<<leptonicV.daughter(0)->pt()<<std::endl;
+	}
 	// muon station2 retrieve, L1 issue, Meng 2017/3/26
 	if(goodmus->size()>1){
 		lep1_etaphi_ = EtaPhiAtME2X(&((*goodmus)[0]), muPropagator2nd_);
@@ -1557,6 +1568,8 @@ void ZPKUTreeMaker::setDummyValues() {
 //	std::cout << "begin setDummyValues()..." << std::endl;
 	lep1_sign = -1e2;
 	lep2_sign = -1e2;
+	ele1_sigmaieie = -99.;
+	ele2_sigmaieie = -99.;
 	lep1_etaphi_.first = -99.;
 	lep1_etaphi_.second = -99.;
 	lep2_etaphi_.first= -99.;
