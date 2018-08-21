@@ -171,6 +171,7 @@ process.treeDumper = cms.EDAnalyzer("ZPKUTreeMaker",
                                     beamSpot = cms.InputTag("offlineBeamSpot","","RECO"),
                                     loosemuonSrc = cms.InputTag("looseMuons"),
 				    goodmuonSrc = cms.InputTag("goodMuons"),# station2 retrieve, 2017/3/26
+				    goodeleSrc = cms.InputTag("goodElectrons"),# retreive electron sigma_ieie for shape correction
                                     hltToken    = cms.InputTag("TriggerResults","","HLT"),
 				    elPaths1     = cms.vstring("HLT_DoubleEle24_22_eta2p1_WPLoose_Gsf_v*"),
                                     elPaths2     = cms.vstring("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*"),
