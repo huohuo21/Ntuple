@@ -255,12 +255,17 @@ class ZPKUTreeMaker : public edm::EDAnalyzer {
 		//High Level Trigger
 		HLTConfigProvider hltConfig;
 		edm::EDGetTokenT<edm::TriggerResults> hltToken_;
-		std::vector<std::string> elPaths1_, elPaths2_;
+		std::vector<std::string> elPaths1_, elPaths2_, elPaths3_, elPaths4_, elPaths5_, elPaths6_, elPaths7_;
 		std::vector<std::string> muPaths1_, muPaths2_, muPaths3_, muPaths4_, muPaths5_, muPaths6_, muPaths7_, muPaths8_;
-		std::vector<std::string> elPaths1, elPaths2;
+		std::vector<std::string> elPaths1, elPaths2, elPaths3, elPaths4, elPaths5, elPaths6, elPaths7;
 		std::vector<std::string> muPaths1, muPaths2, muPaths3, muPaths4,muPaths5, muPaths6, muPaths7, muPaths8;
 		int  HLT_Ele1;
 		int  HLT_Ele2;
+		int  HLT_Ele3;
+		int  HLT_Ele4;
+		int  HLT_Ele5;
+		int  HLT_Ele6;
+		int  HLT_Ele7;
 		int  HLT_Mu1;
 		int  HLT_Mu2;
 		int  HLT_Mu3;
@@ -352,6 +357,11 @@ ZPKUTreeMaker::ZPKUTreeMaker(const edm::ParameterSet& iConfig)//:
 	hltToken_=consumes<edm::TriggerResults>(iConfig.getParameter<edm::InputTag>("hltToken"));
 	elPaths1_=iConfig.getParameter<std::vector<std::string>>("elPaths1");
 	elPaths2_=iConfig.getParameter<std::vector<std::string>>("elPaths2");
+	elPaths3_=iConfig.getParameter<std::vector<std::string>>("elPaths3");
+	elPaths4_=iConfig.getParameter<std::vector<std::string>>("elPaths4");
+	elPaths5_=iConfig.getParameter<std::vector<std::string>>("elPaths5");
+	elPaths6_=iConfig.getParameter<std::vector<std::string>>("elPaths6");
+	elPaths7_=iConfig.getParameter<std::vector<std::string>>("elPaths7");
 	muPaths1_=iConfig.getParameter<std::vector<std::string>>("muPaths1");
 	muPaths2_=iConfig.getParameter<std::vector<std::string>>("muPaths2");
 	muPaths3_=iConfig.getParameter<std::vector<std::string>>("muPaths3");
@@ -562,6 +572,8 @@ ZPKUTreeMaker::ZPKUTreeMaker(const edm::ParameterSet& iConfig)//:
 	outTree_->Branch("ptlep2"          ,&ptlep2         ,"ptlep2/D"         );
 	outTree_->Branch("etalep2"         ,&etalep2        ,"etalep2/D"        );
 	outTree_->Branch("philep2"         ,&philep2        ,"philep2/D"        );
+	outTree_->Branch("ele1_sigmaieie",	&ele1_sigmaieie, "ele1_sigmaieie/D");
+	outTree_->Branch("ele2_sigmaieie",	&ele2_sigmaieie, "ele2_sigmaieie/D");
 	//for muon rochester correction
 	outTree_->Branch("muon1_trackerLayers"          ,&muon1_trackerLayers         ,"muon1_trackerLayers/I"         );
 	outTree_->Branch("matchedgenMu1_pt"          ,&matchedgenMu1_pt         ,"matchedgenMu1_pt/D"         );
@@ -578,6 +590,11 @@ ZPKUTreeMaker::ZPKUTreeMaker(const edm::ParameterSet& iConfig)//:
 	//HLT bits
 	outTree_->Branch("HLT_Ele1"  ,&HLT_Ele1 ,"HLT_Ele1/I" );
 	outTree_->Branch("HLT_Ele2"  ,&HLT_Ele2 ,"HLT_Ele2/I" );
+	outTree_->Branch("HLT_Ele3"  ,&HLT_Ele3 ,"HLT_Ele3/I" );
+	outTree_->Branch("HLT_Ele4"  ,&HLT_Ele4 ,"HLT_Ele4/I" );
+	outTree_->Branch("HLT_Ele5"  ,&HLT_Ele5 ,"HLT_Ele5/I" );
+	outTree_->Branch("HLT_Ele6"  ,&HLT_Ele6 ,"HLT_Ele6/I" );
+	outTree_->Branch("HLT_Ele7"  ,&HLT_Ele7 ,"HLT_Ele7/I" );
 	outTree_->Branch("HLT_Mu1"   ,&HLT_Mu1  ,"HLT_Mu1/I"  );
 	outTree_->Branch("HLT_Mu2"   ,&HLT_Mu2  ,"HLT_Mu2/I"  );
 	outTree_->Branch("HLT_Mu3"   ,&HLT_Mu3  ,"HLT_Mu3/I"  );
@@ -963,6 +980,31 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		xtemp2 = (int)trigRes->accept(hltConfig.triggerIndex(elPaths2[i]));
 		if(HLT_Ele2<xtemp2) HLT_Ele2=xtemp2;
 	}
+	int xtemp3=0;
+        for (size_t i=0; i<elPaths3.size();i++) {
+                xtemp3 = (int)trigRes->accept(hltConfig.triggerIndex(elPaths3[i]));
+                if(HLT_Ele3<xtemp3) HLT_Ele3=xtemp3;
+        }
+        int xtemp4=0;
+        for (size_t i=0; i<elPaths4.size();i++) {
+                xtemp4 = (int)trigRes->accept(hltConfig.triggerIndex(elPaths4[i]));
+                if(HLT_Ele4<xtemp4) HLT_Ele4=xtemp4;
+        }
+	int xtemp5=0;
+        for (size_t i=0; i<elPaths5.size();i++) {
+                xtemp5 = (int)trigRes->accept(hltConfig.triggerIndex(elPaths5[i]));
+                if(HLT_Ele5<xtemp5) HLT_Ele5=xtemp5;
+        }
+        int xtemp6=0;
+        for (size_t i=0; i<elPaths6.size();i++) {
+                xtemp6 = (int)trigRes->accept(hltConfig.triggerIndex(elPaths6[i]));
+                if(HLT_Ele6<xtemp6) HLT_Ele6=xtemp6;
+        }
+	int xtemp7=0;
+        for (size_t i=0; i<elPaths7.size();i++) {
+                xtemp7 = (int)trigRes->accept(hltConfig.triggerIndex(elPaths7[i]));
+                if(HLT_Ele7<xtemp7) HLT_Ele7=xtemp7;
+        }
 	int mtemp1=0;
 	for (size_t i=0; i<muPaths1.size();i++) {
 		mtemp1 = (int)trigRes->accept(hltConfig.triggerIndex(muPaths1[i]));
@@ -1744,6 +1786,11 @@ void ZPKUTreeMaker::setDummyValues() {
 
 	HLT_Ele1=-99;
 	HLT_Ele2=-99;
+	HLT_Ele3=-99;
+	HLT_Ele4=-99;
+	HLT_Ele5=-99;
+	HLT_Ele6=-99;
+	HLT_Ele7=-99;
 	HLT_Mu1=-99;
 	HLT_Mu2=-99;
 	HLT_Mu3=-99;
