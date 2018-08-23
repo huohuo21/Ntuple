@@ -256,9 +256,9 @@ class ZPKUTreeMaker : public edm::EDAnalyzer {
 		HLTConfigProvider hltConfig;
 		edm::EDGetTokenT<edm::TriggerResults> hltToken_;
 		std::vector<std::string> elPaths1_, elPaths2_, elPaths3_, elPaths4_, elPaths5_, elPaths6_, elPaths7_;
-		std::vector<std::string> muPaths1_, muPaths2_, muPaths3_, muPaths4_, muPaths5_, muPaths6_, muPaths7_, muPaths8_;
+		std::vector<std::string> muPaths1_, muPaths2_, muPaths3_, muPaths4_, muPaths5_, muPaths6_, muPaths7_, muPaths8_, muPaths9_, muPaths10_, muPaths11_;
 		std::vector<std::string> elPaths1, elPaths2, elPaths3, elPaths4, elPaths5, elPaths6, elPaths7;
-		std::vector<std::string> muPaths1, muPaths2, muPaths3, muPaths4,muPaths5, muPaths6, muPaths7, muPaths8;
+		std::vector<std::string> muPaths1, muPaths2, muPaths3, muPaths4,muPaths5, muPaths6, muPaths7, muPaths8, muPaths9, muPaths10, muPaths11;
 		int  HLT_Ele1;
 		int  HLT_Ele2;
 		int  HLT_Ele3;
@@ -274,6 +274,9 @@ class ZPKUTreeMaker : public edm::EDAnalyzer {
 		int  HLT_Mu6;
 		int  HLT_Mu7;
 		int  HLT_Mu8;
+		int  HLT_Mu9;
+                int  HLT_Mu10;
+                int  HLT_Mu11;
 		// filter
 		bool passFilter_HBHE_                   ;
 		bool passFilter_HBHEIso_                ;
@@ -370,6 +373,9 @@ ZPKUTreeMaker::ZPKUTreeMaker(const edm::ParameterSet& iConfig)//:
 	muPaths6_=iConfig.getParameter<std::vector<std::string>>("muPaths6");
 	muPaths7_=iConfig.getParameter<std::vector<std::string>>("muPaths7");
 	muPaths8_=iConfig.getParameter<std::vector<std::string>>("muPaths8");
+	muPaths9_=iConfig.getParameter<std::vector<std::string>>("muPaths9");
+        muPaths10_=iConfig.getParameter<std::vector<std::string>>("muPaths10");
+        muPaths11_=iConfig.getParameter<std::vector<std::string>>("muPaths11");
 	GenToken_=consumes<GenEventInfoProduct> (iConfig.getParameter<edm::InputTag>( "generator") ) ;
 	LheToken_=consumes<LHEEventProduct> (iConfig.getParameter<edm::InputTag>( "lhe") ) ;
 	genJet_=consumes<reco::GenJetCollection>(iConfig.getParameter<edm::InputTag>("genJet"));
@@ -603,6 +609,9 @@ ZPKUTreeMaker::ZPKUTreeMaker(const edm::ParameterSet& iConfig)//:
 	outTree_->Branch("HLT_Mu6"   ,&HLT_Mu6  ,"HLT_Mu6/I"  );
 	outTree_->Branch("HLT_Mu7"   ,&HLT_Mu7  ,"HLT_Mu7/I"  );
 	outTree_->Branch("HLT_Mu8"   ,&HLT_Mu8  ,"HLT_Mu8/I"  );
+	outTree_->Branch("HLT_Mu9"   ,&HLT_Mu9  ,"HLT_Mu9/I"  );
+        outTree_->Branch("HLT_Mu10"   ,&HLT_Mu10  ,"HLT_Mu10/I"  );
+        outTree_->Branch("HLT_Mu11"   ,&HLT_Mu11  ,"HLT_Mu11/I"  );
 	// filter
 	outTree_->Branch("passFilter_HBHE"                 ,&passFilter_HBHE_                ,"passFilter_HBHE_/O");
 	outTree_->Branch("passFilter_HBHEIso"                 ,&passFilter_HBHEIso_                ,"passFilter_HBHEIso_/O");
@@ -1045,6 +1054,21 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		mtemp8 = (int)trigRes->accept(hltConfig.triggerIndex(muPaths8[i]));
 		if(HLT_Mu8<mtemp8) HLT_Mu8=mtemp8;
 	}
+	int mtemp9=0;
+        for (size_t i=0; i<muPaths9.size();i++) {
+                mtemp9 = (int)trigRes->accept(hltConfig.triggerIndex(muPaths9[i]));
+                if(HLT_Mu9<mtemp9) HLT_Mu9=mtemp9;
+        }
+	int mtemp10=0;
+        for (size_t i=0; i<muPaths10.size();i++) {
+                mtemp10 = (int)trigRes->accept(hltConfig.triggerIndex(muPaths10[i]));
+                if(HLT_Mu10<mtemp10) HLT_Mu10=mtemp10;
+        }
+	int mtemp11=0;
+        for (size_t i=0; i<muPaths11.size();i++) {
+                mtemp11 = (int)trigRes->accept(hltConfig.triggerIndex(muPaths11[i]));
+                if(HLT_Mu11<mtemp11) HLT_Mu11=mtemp11;
+        }
 
 	edm::Handle<edm::View<reco::GenParticle> > genParticles; 
 	iEvent.getByToken(genSrc_, genParticles);
@@ -1799,6 +1823,9 @@ void ZPKUTreeMaker::setDummyValues() {
 	HLT_Mu6=-99;
 	HLT_Mu7=-99;
 	HLT_Mu8=-99;
+	HLT_Mu9=-99;
+        HLT_Mu10=-99;
+        HLT_Mu11=-99;
 
 
 	passFilter_HBHE_                  = false;
@@ -1829,6 +1856,11 @@ void ZPKUTreeMaker::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup
 
 	elPaths1.clear();
 	elPaths2.clear();
+	elPaths3.clear();
+        elPaths4.clear();
+	elPaths5.clear();
+        elPaths6.clear();
+        elPaths7.clear();
 	muPaths1.clear();
 	muPaths2.clear();
 	muPaths3.clear();
@@ -1837,6 +1869,9 @@ void ZPKUTreeMaker::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup
 	muPaths6.clear();
 	muPaths7.clear();
 	muPaths8.clear();
+	muPaths9.clear();
+	muPaths10.clear();
+	muPaths11.clear();
 	bool changed;
 	if ( !hltConfig.init(iRun, iSetup, "HLT", changed) ) {
 		edm::LogError("HltAnalysis") << "Initialization of HLTConfigProvider failed!!";
@@ -1857,6 +1892,41 @@ void ZPKUTreeMaker::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup
 			foundPaths.pop_back();
 		}
 	}
+	for (size_t i = 0; i < elPaths3_.size(); i++) {
+                std::vector<std::string> foundPaths = hltConfig.matched( hltConfig.triggerNames(), elPaths3_[i] );
+                while ( !foundPaths.empty() ){
+                        elPaths3.push_back( foundPaths.back() );
+                        foundPaths.pop_back();
+                }
+        }
+	for (size_t i = 0; i < elPaths4_.size(); i++) {
+                std::vector<std::string> foundPaths = hltConfig.matched( hltConfig.triggerNames(), elPaths4_[i] );
+                while ( !foundPaths.empty() ){
+                        elPaths4.push_back( foundPaths.back() );
+                        foundPaths.pop_back();
+                }
+        }
+	for (size_t i = 0; i < elPaths5_.size(); i++) {
+                std::vector<std::string> foundPaths = hltConfig.matched( hltConfig.triggerNames(), elPaths5_[i] );
+                while ( !foundPaths.empty() ){
+                        elPaths5.push_back( foundPaths.back() );
+                        foundPaths.pop_back();
+                }
+        }
+	for (size_t i = 0; i < elPaths6_.size(); i++) {
+                std::vector<std::string> foundPaths = hltConfig.matched( hltConfig.triggerNames(), elPaths6_[i] );
+                while ( !foundPaths.empty() ){
+                        elPaths6.push_back( foundPaths.back() );
+                        foundPaths.pop_back();
+                }
+        }
+	for (size_t i = 0; i < elPaths7_.size(); i++) {
+                std::vector<std::string> foundPaths = hltConfig.matched( hltConfig.triggerNames(), elPaths7_[i] );
+                while ( !foundPaths.empty() ){
+                        elPaths7.push_back( foundPaths.back() );
+                        foundPaths.pop_back();
+                }
+        }
 	for (size_t i = 0; i < muPaths1_.size(); i++) {
 		std::vector<std::string> foundPaths = hltConfig.matched( hltConfig.triggerNames(), muPaths1_[i] );
 		while ( !foundPaths.empty() ){
@@ -1913,9 +1983,35 @@ void ZPKUTreeMaker::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup
 			foundPaths.pop_back();
 		}
 	}
+	for (size_t i = 0; i < muPaths9_.size(); i++) {
+                std::vector<std::string> foundPaths = hltConfig.matched( hltConfig.triggerNames(), muPaths9_[i] );
+                while ( !foundPaths.empty() ){
+                        muPaths9.push_back( foundPaths.back() );
+                        foundPaths.pop_back();
+                }
+        }
+	for (size_t i = 0; i < muPaths10_.size(); i++) {
+                std::vector<std::string> foundPaths = hltConfig.matched( hltConfig.triggerNames(), muPaths10_[i] );
+                while ( !foundPaths.empty() ){
+                        muPaths10.push_back( foundPaths.back() );
+                        foundPaths.pop_back();
+                }
+        }
+	for (size_t i = 0; i < muPaths11_.size(); i++) {
+                std::vector<std::string> foundPaths = hltConfig.matched( hltConfig.triggerNames(), muPaths11_[i] );
+                while ( !foundPaths.empty() ){
+                        muPaths11.push_back( foundPaths.back() );
+                        foundPaths.pop_back();
+                }
+        }
 	std::cout<<"\n************** HLT Information **************\n";
 	for (size_t i=0; i < elPaths1.size(); i++) std::cout << "\n Electron paths: " << elPaths1[i].c_str() <<"\t"<< std::endl;
 	for (size_t i=0; i < elPaths2.size(); i++) std::cout << "\n Electron paths: " << elPaths2[i].c_str() <<"\t"<< std::endl;
+	for (size_t i=0; i < elPaths3.size(); i++) std::cout << "\n Electron paths: " << elPaths3[i].c_str() <<"\t"<< std::endl;
+	for (size_t i=0; i < elPaths4.size(); i++) std::cout << "\n Electron paths: " << elPaths4[i].c_str() <<"\t"<< std::endl;
+	for (size_t i=0; i < elPaths5.size(); i++) std::cout << "\n Electron paths: " << elPaths5[i].c_str() <<"\t"<< std::endl;
+	for (size_t i=0; i < elPaths6.size(); i++) std::cout << "\n Electron paths: " << elPaths6[i].c_str() <<"\t"<< std::endl;
+	for (size_t i=0; i < elPaths7.size(); i++) std::cout << "\n Electron paths: " << elPaths7[i].c_str() <<"\t"<< std::endl;
 	for (size_t i=0; i < muPaths1.size(); i++) std::cout << "\n Muon paths1    : " << muPaths1[i].c_str() <<"\t"<< std::endl;
 	for (size_t i=0; i < muPaths2.size(); i++) std::cout << "\n Muon paths2    : " << muPaths2[i].c_str() <<"\t"<< std::endl;
 	for (size_t i=0; i < muPaths3.size(); i++) std::cout << "\n Muon paths3    : " << muPaths3[i].c_str() <<"\t"<< std::endl;
@@ -1924,6 +2020,9 @@ void ZPKUTreeMaker::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup
 	for (size_t i=0; i < muPaths6.size(); i++) std::cout << "\n Muon paths6    : " << muPaths6[i].c_str() <<"\t"<< std::endl;
 	for (size_t i=0; i < muPaths7.size(); i++) std::cout << "\n Muon paths7    : " << muPaths7[i].c_str() <<"\t"<< std::endl;
 	for (size_t i=0; i < muPaths8.size(); i++) std::cout << "\n Muon paths8    : " << muPaths8[i].c_str() <<"\t"<< std::endl;
+	for (size_t i=0; i < muPaths9.size(); i++) std::cout << "\n Muon paths9    : " << muPaths9[i].c_str() <<"\t"<< std::endl;
+	for (size_t i=0; i < muPaths10.size(); i++) std::cout << "\n Muon paths10    : " << muPaths10[i].c_str() <<"\t"<< std::endl;
+	for (size_t i=0; i < muPaths11.size(); i++) std::cout << "\n Muon paths11    : " << muPaths11[i].c_str() <<"\t"<< std::endl;
 	std::cout<<"\n*********************************************\n\n";
 
 }
